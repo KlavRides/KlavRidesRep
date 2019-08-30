@@ -32,9 +32,9 @@ public class ForumServiceImpl implements ForumService {
 	UserAccountRepository userRepository;
 
 	@Override
-	public PostDto addNewPost(NewPostDto newPost) {
+	public PostDto addNewPost(NewPostDto newPost, String author) {
 		Post post = new Post(newPost.getTitle(), newPost.getContent(),
-				newPost.getAuthor(), newPost.getTags());
+				author, newPost.getTags());
 		post = repository.save(post);
 		return convertToPostDto(post);
 	}
@@ -90,10 +90,10 @@ public class ForumServiceImpl implements ForumService {
 	}
 
 	@Override
-	public PostDto addComment(String id, NewCommentDto newCommentDto) {
+	public PostDto addComment(String id, String author, NewCommentDto newCommentDto) {
 		Post post = repository.findById(id).orElse(null);
 		if(post != null) {
-			post.addComment(convertToComment(newCommentDto));
+			post.addComment(convertToComment(author, newCommentDto.getMessage()));
 			repository.save(post);
 			return convertToPostDto(post);
 		}
@@ -140,8 +140,8 @@ public class ForumServiceImpl implements ForumService {
 				.build();
 	}
 	
-	private Comment convertToComment(NewCommentDto newCommentDto) {
-		return new Comment(newCommentDto.getUser(), newCommentDto.getMessage());
+	private Comment convertToComment(String author, String message) {
+		return new Comment(author, message);
 	}
 	
 	private CommentDto convertToCommentDto(Comment comment) {

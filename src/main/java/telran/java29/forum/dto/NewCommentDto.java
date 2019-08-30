@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class NewCommentDto {
-	String user;
+//	String user;
 	String message;
 
 }

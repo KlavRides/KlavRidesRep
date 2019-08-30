@@ -33,7 +33,7 @@ public class AccountManagmentController {
 	}
 
 	@PostMapping("/{id}")
-	@PreAuthorize("#id == authentication.name and hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
+//	@PreAuthorize("#id == authentication.name and hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
 	public UserProfileDto userLogin(@PathVariable String id) {
 		return accountService.findUserById(id);
 	}

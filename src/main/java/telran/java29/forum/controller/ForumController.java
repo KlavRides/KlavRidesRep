@@ -28,10 +28,10 @@ public class ForumController {
 	@Autowired
 	ForumService service;
 
-	@PostMapping("/post")
-	@PreAuthorize("#newPost.author == authentication.name and hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
-	public PostDto addPost(@RequestBody NewPostDto newPost) {
-		return service.addNewPost(newPost);
+	@PostMapping("/post/{id}")
+//	@PreAuthorize("#newPost.author == authentication.name and hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
+	public PostDto addPost(@RequestBody NewPostDto newPost, @PathVariable("id") String author) {
+		return service.addNewPost(newPost, author);
 	}
 
 	@GetMapping("/post/{id}")
@@ -54,10 +54,10 @@ public class ForumController {
 		return service.addLike(id);
 	}
 
-	@PutMapping("/post/{id}/comment")
-	@PreAuthorize("#newCommentDto.user eq authentication.name and hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
-	public PostDto addComment(@PathVariable String id, @RequestBody NewCommentDto newCommentDto) {
-		return service.addComment(id, newCommentDto);
+	@PutMapping("/post/{id}/comment/{author}")
+//	@PreAuthorize("#newCommentDto.user eq authentication.name and hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
+	public PostDto addComment(@PathVariable String id, @PathVariable String author, @RequestBody NewCommentDto newCommentDto) {
+		return service.addComment(id, author, newCommentDto);
 	}
 
 	@PostMapping("/posts/tags")

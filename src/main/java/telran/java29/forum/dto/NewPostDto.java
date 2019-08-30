@@ -8,6 +8,6 @@ import lombok.Getter;
 public class NewPostDto {
 	String title;
 	String content;
-	String author;
+//	String author;
 	Set<String> tags;
 }

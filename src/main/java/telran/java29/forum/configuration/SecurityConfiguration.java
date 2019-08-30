@@ -26,16 +26,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.httpBasic();
 		http.csrf().disable();
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/account/{id}/{role}").hasRole("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/account").hasAnyRole("USER", "MODERATOR", "ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/account", "/forum/post/{id}/like","/forum/post").hasAnyRole("USER", "MODERATOR", "ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/account/password").authenticated();
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/forum/post/{id}").hasAnyRole("USER", "MODERATOR", "ADMIN");
-//		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/forum/post/{id}/like").hasAnyRole("USER", "MODERATOR", "ADMIN");
-//		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/forum/post").hasAnyRole("USER", "MODERATOR", "ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/forum/post/{id}").access("@customSecurity.checkAuthorityForDeletePost(authentication, #id)");
-		http.authorizeRequests().antMatchers("/actuator/**").hasRole("ADMIN");
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+		.authorizeRequests()
+			.antMatchers("/account/{id}/{role}").hasRole("ADMIN")
+			.antMatchers(HttpMethod.DELETE, "/account").hasAnyRole("USER", "MODERATOR", "ADMIN")
+			.antMatchers(HttpMethod.PUT, "/account", "/forum/post/{id}/like","/forum/post").hasAnyRole("USER", "MODERATOR", "ADMIN")
+			.antMatchers(HttpMethod.PUT, "/account/password").authenticated()
+			.antMatchers(HttpMethod.GET, "/forum/post/{id}").hasAnyRole("USER", "MODERATOR", "ADMIN")
+//			.antMatchers(HttpMethod.PUT, "/forum/post/{id}/like").hasAnyRole("USER", "MODERATOR", "ADMIN");
+//			.antMatchers(HttpMethod.PUT, "/forum/post").hasAnyRole("USER", "MODERATOR", "ADMIN");
+			.antMatchers(HttpMethod.DELETE, "/forum/post/{id}").access("@customSecurity.checkAuthorityForDeletePost(authentication, #id)")
+			.antMatchers(HttpMethod.POST, "/account/{id}", "/forum/post/{id}").access("@customSecurity.checkAuthorityForUserLogin(authentication, #id) and hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
+			.antMatchers(HttpMethod.PUT, "/forum/post/{id}/comment/{author}").access("@customSecurity.checkAuthorityForAddComment(authentication, #author) and hasAnyRole('ADMIN', 'MODERATOR', 'USER')")
+			.antMatchers("/actuator/**").hasRole("ADMIN");
 	}
 	
 	@Bean

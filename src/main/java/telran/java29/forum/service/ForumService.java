@@ -10,7 +10,7 @@ import telran.java29.forum.dto.PostUpdateDto;
 
 public interface ForumService {
 
-	PostDto addNewPost(NewPostDto newPost);
+	PostDto addNewPost(NewPostDto newPost, String author);
 
 	PostDto getPost(String id);
 
@@ -20,7 +20,7 @@ public interface ForumService {
 
 	boolean addLike(String id);
 
-	PostDto addComment(String id, NewCommentDto newCommentDto);
+	PostDto addComment(String id, String author, NewCommentDto newCommentDto);
 
 	Iterable<PostDto> findPostsByTags(List<String> tags);
 

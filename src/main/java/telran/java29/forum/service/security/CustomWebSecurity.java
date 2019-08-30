@@ -29,4 +29,12 @@ public class CustomWebSecurity {
 		boolean checkModerator = userAccount.getRoles().contains("ROLE_MODERATOR");
 		return checkOwner || checkModerator;
 	}
+	
+	public boolean checkAuthorityForUserLogin(Authentication authentication, String login) {
+		return authentication.getName().equals(login);
+	}
+	
+	public boolean checkAuthorityForAddComment(Authentication authentication, String author) {
+		return authentication.getName().equals(author);
+	}
 }
